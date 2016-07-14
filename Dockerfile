@@ -71,9 +71,10 @@ COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Execute the script that creates a user
-COPY mongouser.js /mongouser.js
-RUN mongod \
-	&& mongo localhost:27017 mongouser.js
+COPY createUser.sh /createUser.sh
+RUN chmod +x /createUser.sh \
+	&& ./createUser.sh
+
 
 
 ENTRYPOINT ["/entrypoint.sh"]
