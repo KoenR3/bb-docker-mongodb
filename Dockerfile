@@ -77,7 +77,7 @@ RUN chmod +x /createUser.sh \
 
 
 
-ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 27017
-CMD ["mongod","auth"]
+CMD ["mongod","--auth"]
