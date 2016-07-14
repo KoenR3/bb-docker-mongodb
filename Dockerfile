@@ -66,10 +66,6 @@ RUN mkdir -p /data/db /data/configdb \
 	&& chown -R mongodb:mongodb /data/db /data/configdb
 VOLUME /data/db /data/configdb
 
-# Add the entrypoint file
-COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 # Execute the script that creates a user
 COPY createUser.sh /createUser.sh
 RUN chmod +x /createUser.sh \
