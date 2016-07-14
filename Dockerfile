@@ -42,11 +42,14 @@ RUN set -ex \
 
 ENV MONGO_MAJOR 3.2
 ENV MONGO_VERSION 3.2.7
-ENV MONGO_USER admin
+ENV MONGO_ADMIN admin
+ENV MONGO_ADMIN_PASS vectrtest
+ENV MONGO_USER vectr
 ENV MONGO_PASS vectrtest
 
 #Add mongodb repo
-RUN echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/$MONGO_MAJOR main" > /etc/apt/sources.list.d/mongodb-org.list
+RUN distro_release=$(lsb_release -c -s) \
+	&& echo "deb http://repo.mongodb.org/apt/ubuntu $distro_release/mongodb-org/$MONGO_MAJOR multiverse" > /etc/apt/sources.list.d/mongodb-org.list
 
 # Install
 RUN set -x \
@@ -76,4 +79,4 @@ RUN chmod +x /createUser.sh \
 #ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 27017
-CMD ["mongod","--auth"]
+CMD ["mongod"]
