@@ -42,9 +42,13 @@ RUN set -ex \
 
 ENV MONGO_MAJOR 3.2
 ENV MONGO_VERSION 3.2.7
+ENV MONGO_USER admin
+ENV MONGO_PASS vectrtest
 
+#Add mongodb repo
 RUN echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/$MONGO_MAJOR main" > /etc/apt/sources.list.d/mongodb-org.list
 
+# Install
 RUN set -x \
 	&& apt-get update \
 	&& apt-get install -y \
@@ -57,12 +61,21 @@ RUN set -x \
 	&& rm -rf /var/lib/mongodb \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
+# Create mongo data path
 RUN mkdir -p /data/db /data/configdb \
 	&& chown -R mongodb:mongodb /data/db /data/configdb
 VOLUME /data/db /data/configdb
 
+# Add the entrypoint file
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+# Execute the script that creates a user
+COPY mongouser.js /mongouser.js
+RUN mongod \
+	&& mongo localhost:27017 mongouser.js
+
+
 ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 27017
